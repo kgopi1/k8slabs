@@ -1,0 +1,23 @@
+apiVersion: batch/v1
+kind: CronJob
+metadata:
+  name: crontest
+  namespace: crontest
+spec:
+  schedule: "* * * * *"
+  jobTemplate:
+    spec:
+      template:
+        metadata:
+          labels:
+            app: crontest
+        spec:
+          containers:
+          - name: curltest
+            image: alpine/curl
+            imagePullPolicy: IfNotPresent
+            args:
+            - /bin/sh
+            - -ec
+            - 'curl -I http://nginxsvc.crontest.svc.cluster.local'
+          restartPolicy: OnFailure
